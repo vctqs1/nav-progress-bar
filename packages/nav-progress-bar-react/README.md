@@ -4,6 +4,10 @@ React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vc
 
 > Live demo: https://nav-progress-p0gw9z3lf-vctqs1s-projects.vercel.app/
 
+> Demo video:
+
+<video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
+
 This package provides a thin React component that renders the `<vctqs1-nav-progress-bar>` custom element with proper TypeScript JSX types and SSR support via Declarative Shadow DOM.
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
@@ -81,10 +85,6 @@ export function onRouterTransitionStart(
 ```
 
 That's it. In Next.js App Router, the bar starts from `onRouterTransitionStart()` on every route departure and finishes automatically when the new page commits.
-
-> 🎬 **Demo** — watch the bar in action with Next.js App Router:
-
-<video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
 
 ---
 
