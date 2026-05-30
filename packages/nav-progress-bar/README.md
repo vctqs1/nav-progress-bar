@@ -1,6 +1,6 @@
 # @vctqs1/nav-progress-bar
 
-A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. Works in any framework — or no framework at all.
+A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. It can be used as a Next.js toploader for App Router and also works in any framework — or no framework at all.
 
 > Live demo: https://nav-progress-bar-git-main-vctqs1s-projects.vercel.app/
 
