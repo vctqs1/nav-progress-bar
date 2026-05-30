@@ -4,16 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/strings"
+      "path": "./packages/nav-progress-bar"
     },
     {
-      "path": "./packages/colors"
-    },
-    {
-      "path": "./packages/async"
-    },
-    {
-      "path": "./packages/utils"
+      "path": "./packages/nav-progress-bar-react"
     }
   ]
 }

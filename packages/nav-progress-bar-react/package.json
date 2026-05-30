@@ -1,6 +1,6 @@
 {
-  "name": "@vctqs1/nav-progress-bar",
-  "version": "0.0.2-0",
+  "name": "@vctqs1/nav-progress-bar-react",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -8,6 +8,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
@@ -17,11 +18,11 @@
     "dist",
     "!**/*.tsbuildinfo"
   ],
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    "@vctqs1/nav-progress-bar": "workspace:*"
   },
   "nx": {
-    "name": "@vctqs1/nav-progress-bar",
+    "name": "@vctqs1/nav-progress-bar-react",
     "projectType": "library"
   }
 }

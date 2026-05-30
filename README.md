@@ -1,203 +1,152 @@
-# Nx TypeScript Repository
+# @vctqs1/nav-progress-bar
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. Works in any framework — or no framework at all.
 
-✨ A repository showcasing key [Nx](https://nx.dev) features for TypeScript monorepos ✨
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
-## 📦 Project Overview
+> Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but works anywhere the browser supports the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API).
 
-This repository demonstrates a production-ready TypeScript monorepo with:
+## Packages
 
-- **3 Publishable Packages** - Ready for NPM publishing
+| Package | Description |
+|---------|-------------|
+| [`@vctqs1/nav-progress-bar`](./packages/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic |
+| [`@vctqs1/nav-progress-bar-react`](./packages/nav-progress-bar-react) | React wrapper with SSR support and JSX types |
 
-  - `@org/strings` - String manipulation utilities
-  - `@org/async` - Async utility functions with retry logic
-  - `@org/colors` - Color conversion and manipulation utilities
+## Quick Install
 
-- **1 Internal Library**
-  - `@org/utils` - Shared utilities (private, not published)
+**Vanilla / any framework:**
+```bash
+npm install @vctqs1/nav-progress-bar
+```
 
-## 🚀 Quick Start
+**React / Next.js:**
+```bash
+npm install @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
+```
+
+## Quick Start
+
+### Any framework
+
+```html
+<script type="module">
+  import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
+  registerNavProgressBar();
+</script>
+
+<vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
+```
+
+### Next.js App Router
+
+```tsx
+// app/layout.tsx
+import NavProgressBar from '@vctqs1/nav-progress-bar-react';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html>
+      <body>
+        <NavProgressBar />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+```ts
+// instrumentation-client.ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+
+export function onRouterTransitionStart(
+  url: string,
+  navigationType: 'push' | 'replace' | 'traverse',
+) {
+  getNavProgressBar()?.start();
+}
+```
+
+For full framework guides (Nuxt, SvelteKit, Astro, Vanilla) see the [core package README](./packages/nav-progress-bar/README.md).
+
+## Why
+
+In Next.js App Router, `loading.js` is a React Suspense boundary — it only renders **after** the RSC payload arrives. On slow connections this creates a dead period of 100ms–2s+ where the page looks frozen after a user clicks a link.
+
+```
+User clicks Link
+  → nothing visible happens   ← dead gap: page looks frozen
+  → RSC payload arrives
+  → React renders Suspense shell
+    → loading.js displays      ← feedback finally appears
+```
+
+`@vctqs1/nav-progress-bar` fills that gap by starting the moment the browser fires the `navigate` event — synchronously on click, before any network request:
+
+```
+User clicks Link
+  → "navigate" fires instantly
+    → bar starts               ← immediate feedback (0ms)
+    → RSC payload arrives
+    → React patches the tree
+      → "navigatesuccess" fires
+        → bar finishes
+```
+
+The same mechanism works in any framework that triggers browser history mutations (`history.pushState`, `history.replaceState`) — which is every modern SPA router.
+
+## How It Works
+
+The bar is implemented as a native Custom Element (`<vctqs1-nav-progress-bar>`) with:
+
+- **Shadow DOM** for style encapsulation
+- **Constructable Stylesheets** (`adoptedStyleSheets`) for all styling — no inline `style=`, no `<style>` tags, fully CSP `style-src` safe
+- **Navigation API** (`navigate` → start, `navigatesuccess` → finish) for auto lifecycle
+- **Declarative Shadow DOM** for SSR hydration without flash
+
+Progress uses asymptotic easing — every 200ms the bar moves 8% of the remaining distance toward 85%, never quite reaching it. On `finish()` it jumps to 100% and fades out.
+
+## Browser Support
+
+Requires the [Navigation API](https://caniuse.com/mdn-api_navigation) — Chrome 102+, Edge 102+. Registration is skipped gracefully in unsupported browsers (no errors, no stuck bar).
+
+## Development
+
+This is an [NX](https://nx.dev) monorepo using `pnpm`.
 
 ```bash
-# Clone the repository
-git clone <your-fork-url>
-cd typescript-template
-
 # Install dependencies
-npm install
+pnpm install
 
 # Build all packages
-npx nx run-many -t build
+pnpm nx run-many --target=build
 
-# Run tests
-npx nx run-many -t test
+# Test all packages
+pnpm nx run-many --target=test
 
-# Lint all projects
-npx nx run-many -t lint
+# Build a specific package
+pnpm nx build nav-progress-bar
+pnpm nx build nav-progress-bar-react
 
-# Run everything in parallel
-npx nx run-many -t lint test build --parallel=3
-
-# Visualize the project graph
-npx nx graph
+# Test a specific package
+pnpm nx test nav-progress-bar
+pnpm nx test nav-progress-bar-react
 ```
 
-## ⭐ Featured Nx Capabilities
-
-This repository showcases several powerful Nx features:
-
-### 1. 🔒 Module Boundaries
-
-Enforces architectural constraints using tags. Each package has specific dependencies it can use:
-
-- `scope:shared` (utils) - Can be used by all packages
-- `scope:strings` - Can only depend on shared utilities
-- `scope:async` - Can only depend on shared utilities
-- `scope:colors` - Can only depend on shared utilities
-
-**Try it out:**
+## Publishing
 
 ```bash
-# See the current project graph and boundaries
-npx nx graph
+# Build first
+pnpm nx run-many --target=build
 
-# View a specific project's details
-npx nx show project strings --web
+# Publish core
+cd packages/nav-progress-bar && npm publish --access public
+
+# Publish React wrapper
+cd packages/nav-progress-bar-react && npm publish --access public
 ```
 
-[Learn more about module boundaries →](https://nx.dev/features/enforce-module-boundaries)
+## License
 
-### 2. 🛠️ Custom Run Commands
-
-Packages can define custom commands beyond standard build/test/lint:
-
-```bash
-# Run the custom build-base command for strings package
-npx nx run strings:build-base
-
-# See all available targets for a project
-npx nx show project strings
-```
-
-[Learn more about custom run commands →](https://nx.dev/concepts/executors-and-configurations)
-
-### 3. 🔧 Self-Healing CI
-
-The CI pipeline includes `nx fix-ci` which automatically identifies and suggests fixes for common issues. To test it, you can make a change to `async-retry.spec.ts` so that it fails, and create a PR.
-
-```bash
-# Run tests and see the failure
-npx nx test async
-
-# In CI, this command provides automated fixes
-npx nx fix-ci
-```
-
-[Learn more about self-healing CI →](https://nx.dev/ci/features/self-healing-ci)
-
-### 4. 📦 Package Publishing
-
-Manage releases and publishing with Nx Release:
-
-```bash
-# Dry run to see what would be published
-npx nx release --dry-run
-
-# Version and release packages
-npx nx release
-
-# Publish only specific packages
-npx nx release publish --projects=strings,colors
-```
-
-[Learn more about Nx Release →](https://nx.dev/features/manage-releases)
-
-## 📁 Project Structure
-
-```
-├── packages/
-│   ├── strings/     [scope:strings] - String utilities (publishable)
-│   ├── async/       [scope:async]   - Async utilities (publishable)
-│   ├── colors/      [scope:colors]  - Color utilities (publishable)
-│   └── utils/       [scope:shared]  - Shared utilities (private)
-├── nx.json          - Nx configuration
-├── tsconfig.json    - TypeScript configuration
-└── eslint.config.mjs - ESLint with module boundary rules
-```
-
-## 🏷️ Understanding Tags
-
-This repository uses tags to enforce module boundaries:
-
-| Package        | Tag             | Can Import From        |
-| -------------- | --------------- | ---------------------- |
-| `@org/utils`   | `scope:shared`  | Nothing (base library) |
-| `@org/strings` | `scope:strings` | `scope:shared`         |
-| `@org/async`   | `scope:async`   | `scope:shared`         |
-| `@org/colors`  | `scope:colors`  | `scope:shared`         |
-
-The ESLint configuration enforces these boundaries, preventing circular dependencies and maintaining clean architecture.
-
-## 🧪 Testing Module Boundaries
-
-To see module boundary enforcement in action:
-
-1. Try importing `@org/colors` into `@org/strings`
-2. Run `npx nx lint strings`
-3. You'll see an error about violating module boundaries
-
-## 📚 Useful Commands
-
-```bash
-# Project exploration
-npx nx graph                                    # Interactive dependency graph
-npx nx list                                     # List installed plugins
-npx nx show project strings --web              # View project details
-
-# Development
-npx nx build strings                           # Build a specific package
-npx nx test async                              # Test a specific package
-npx nx lint colors                             # Lint a specific package
-
-# Running multiple tasks
-npx nx run-many -t build                       # Build all projects
-npx nx run-many -t test --parallel=3          # Test in parallel
-npx nx run-many -t lint test build            # Run multiple targets
-
-# Affected commands (great for CI)
-npx nx affected -t build                       # Build only affected projects
-npx nx affected -t test                        # Test only affected projects
-
-# Release management
-npx nx release --dry-run                       # Preview release changes
-npx nx release                                 # Create a new release
-```
-
-## Nx Cloud
-
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## 🔗 Learn More
-
-- [Nx Documentation](https://nx.dev)
-- [Module Boundaries](https://nx.dev/features/enforce-module-boundaries)
-- [Custom Commands](https://nx.dev/concepts/executors-and-configurations)
-- [Self-Healing CI](https://nx.dev/ci/features/self-healing-ci)
-- [Releasing Packages](https://nx.dev/features/manage-releases)
-- [Nx Cloud](https://nx.dev/ci/intro/why-nx-cloud)
-
-## 💬 Community
-
-Join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [X (Twitter)](https://twitter.com/nxdevtools)
-- [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [YouTube](https://www.youtube.com/@nxdevtools)
-- [Blog](https://nx.dev/blog)
+MIT
