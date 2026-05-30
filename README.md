@@ -4,6 +4,8 @@ A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Compo
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but works anywhere the browser supports the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API).
 
+> Next.js App Router users: this package fixes the frozen gap between clicking a link and `loading.js` becoming visible, so navigation feels immediate instead of stalled.
+
 ## Table of Contents
 
 - [Packages](#packages)
@@ -22,8 +24,8 @@ A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Compo
 
 | Package | Description |
 |---------|-------------|
-| [`@vctqs1/nav-progress-bar`](./packages/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic |
-| [`@vctqs1/nav-progress-bar-react`](./packages/nav-progress-bar-react) | React wrapper with SSR support and JSX types |
+| [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic. [Package README](./packages/nav-progress-bar/README.md) |
+| [`@vctqs1/nav-progress-bar-react`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | React wrapper with SSR support and JSX types. [Package README](./packages/nav-progress-bar-react/README.md) |
 
 ## Quick Install
 

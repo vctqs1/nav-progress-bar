@@ -4,14 +4,19 @@ React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vc
 
 This package provides a thin React component that renders the `<vctqs1-nav-progress-bar>` custom element with proper TypeScript JSX types and SSR support via Declarative Shadow DOM.
 
+> Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
+
+> If you use Next.js App Router, this is the missing feedback layer before `loading.js` renders.
+
 ## Table of Contents
 
 - [Installation](#installation)
-- [Peer Dependencies](#peer-dependencies)
+- [Packages](#packages)
 - [Quick Start](#quick-start)
   - [Next.js App Router](#nextjs-app-router-recommended-setup)
   - [Custom color](#custom-color)
   - [React SPA (Vite, CRA, etc.)](#react-spa-vite-cra-etc)
+- [Why](#why)
 - [Props](#props)
 - [How SSR Works](#how-ssr-works)
 - [Why a Separate Package?](#why-a-separate-package)
@@ -26,16 +31,20 @@ npm install @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
 pnpm add @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
 ```
 
-## Peer Dependencies
+## Packages
 
-| Package | Version |
-|---------|---------|
-| `react` | `>=18.0.0` |
-| `@vctqs1/nav-progress-bar` | `>=1.0.0` |
+| Package | Description |
+|---------|-------------|
+| [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic |
+| [`@vctqs1/nav-progress-bar-react`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | React wrapper with SSR support and JSX types |
+
+
 
 ## Quick Start
 
 ### Next.js App Router (recommended setup)
+
+This is the main reason to use this package: immediate route feedback before App Router finishes loading the next screen.
 
 **1. Add to root layout** (`app/layout.tsx`):
 
@@ -69,7 +78,7 @@ export function onRouterTransitionStart(
 }
 ```
 
-That's it. The bar starts on every route departure and finishes automatically when the new page commits.
+That's it. In Next.js App Router, the bar starts from `onRouterTransitionStart()` on every route departure and finishes automatically when the new page commits.
 
 > 🎬 **Demo** — watch the bar in action with Next.js App Router:
 
@@ -114,6 +123,42 @@ export default function App() {
 ```
 
 In a plain SPA the bar auto-starts and auto-finishes via the browser Navigation API — no extra wiring needed.
+
+## Why
+
+![Next.js App Router loading gap vs nav-progress-bar flow](./docs/nextjs-app-router-dead-gap.svg)
+
+In Next.js App Router, `loading.js` is a React Suspense boundary — it only renders **after** the RSC payload arrives. On slow connections this creates a dead period of 100ms–2s+ where the page looks frozen after a user clicks a link.
+
+```
+User clicks Link
+  → nothing visible happens   ← dead gap: page looks frozen
+  → RSC payload arrives
+  → React renders Suspense shell
+    → loading.js displays      ← feedback finally appears
+```
+
+This is a known App Router limitation:
+- [Next.js issue #43548 — loading.js not shown immediately on navigate](https://github.com/vercel/next.js/issues/43548)
+- [Reddit thread — loading state does not show when navigating](https://www.reddit.com/r/nextjs/comments/1c3ngkh/the_loading_state_does_not_show_when_i_navigate/)
+
+
+
+`@vctqs1/nav-progress-bar` fills that gap by starting from Next.js `onRouterTransitionStart()` — synchronously on route departure, before the next screen is ready:
+
+```
+User clicks <Link> / router.push()
+  → Next.js dispatches ACTION_NAVIGATE (React startTransition)   [app-router-instance.ts#L457-L474]
+  → Next.js calls history.pushState() to update the URL          [app-router.tsx#L52-L54]
+    → browser fires "navigate"       → bar starts
+      → Next.js fetches RSC payload
+        → React patches the tree
+          → Next.js finalises with history.pushState()           [app-router.tsx#L52-L54]
+            → browser fires "navigatesuccess" → bar finishes
+```
+
+Next.js App Router does **not** call `navigation.navigate()` directly. It manages routing internally via its own action queue ([`dispatchAppRouterAction`](https://github.com/vercel/next.js/blob/v16.2.6/packages/next/src/client/components/app-router-instance.ts#L457-L474)) using React `startTransition`, then calls `history.pushState()` to update the URL. The browser Navigation API fires `navigate` and `navigatesuccess` as a side effect of those `history` mutations.
+
 
 ## Props
 

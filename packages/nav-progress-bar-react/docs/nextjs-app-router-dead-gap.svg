@@ -1,0 +1,49 @@
+<svg width="900" height="540" viewBox="0 0 900 540" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Next.js App Router loading gap and nav-progress-bar flow</title>
+  <desc id="desc">A side-by-side comparison showing the dead gap before loading.js appears versus immediate feedback with nav-progress-bar.</desc>
+  <rect width="900" height="540" rx="24" fill="#F7F4EC"/>
+  <rect x="28" y="28" width="844" height="484" rx="20" fill="#FFFDF8" stroke="#D7CFBE" stroke-width="2"/>
+
+  <text x="48" y="66" fill="#1F2A1F" font-family="Arial, sans-serif" font-size="28" font-weight="700">Next.js App Router: dead gap vs immediate feedback</text>
+  <text x="48" y="94" fill="#5A625A" font-family="Arial, sans-serif" font-size="15">Why this package exists: start progress before loading.js becomes visible.</text>
+
+  <rect x="48" y="122" width="380" height="342" rx="18" fill="#FFF4F1" stroke="#E7B3A9" stroke-width="2"/>
+  <text x="72" y="160" fill="#8A2D1D" font-family="Arial, sans-serif" font-size="24" font-weight="700">Without nav-progress-bar</text>
+  <text x="72" y="186" fill="#9C4A39" font-family="Arial, sans-serif" font-size="15">loading.js appears only after the RSC payload arrives.</text>
+
+  <rect x="72" y="214" width="332" height="52" rx="12" fill="#FFFFFF" stroke="#E4C5BC"/>
+  <text x="92" y="246" fill="#2B2B2B" font-family="Arial, sans-serif" font-size="18" font-weight="600">1. User clicks Link</text>
+
+  <path d="M238 266V292" stroke="#C77F70" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+
+  <rect x="72" y="292" width="332" height="74" rx="12" fill="#FFF0EC" stroke="#DB9E91" stroke-width="2"/>
+  <text x="92" y="324" fill="#7C3023" font-family="Arial, sans-serif" font-size="18" font-weight="700">2. Nothing visible yet</text>
+  <text x="92" y="348" fill="#914234" font-family="Arial, sans-serif" font-size="15">Dead gap: the page feels frozen for 100ms–2s+</text>
+
+  <path d="M238 366V392" stroke="#C77F70" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+
+  <rect x="72" y="392" width="332" height="52" rx="12" fill="#FFFFFF" stroke="#E4C5BC"/>
+  <text x="92" y="424" fill="#2B2B2B" font-family="Arial, sans-serif" font-size="18" font-weight="600">3. RSC arrives, then loading.js renders</text>
+
+  <rect x="470" y="122" width="382" height="342" rx="18" fill="#EFFAF1" stroke="#9FCAA4" stroke-width="2"/>
+  <text x="494" y="160" fill="#175A2A" font-family="Arial, sans-serif" font-size="24" font-weight="700">With nav-progress-bar</text>
+  <text x="494" y="186" fill="#366A42" font-family="Arial, sans-serif" font-size="15">Next.js starts progress in onRouterTransitionStart().</text>
+
+  <rect x="494" y="214" width="334" height="52" rx="12" fill="#FFFFFF" stroke="#B9D9BE"/>
+  <text x="514" y="246" fill="#2B2B2B" font-family="Arial, sans-serif" font-size="18" font-weight="600">1. User clicks Link</text>
+
+  <path d="M660 266V292" stroke="#6EAF79" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+
+  <rect x="494" y="292" width="334" height="74" rx="12" fill="#F6FFF7" stroke="#8FC398" stroke-width="2"/>
+  <text x="514" y="324" fill="#1F5E2B" font-family="Arial, sans-serif" font-size="18" font-weight="700">2. onRouterTransitionStart()</text>
+  <text x="514" y="348" fill="#2F6C3B" font-family="Arial, sans-serif" font-size="15">Bar starts immediately before the next screen is ready</text>
+
+  <path d="M660 366V392" stroke="#6EAF79" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+
+  <rect x="494" y="392" width="334" height="52" rx="12" fill="#FFFFFF" stroke="#B9D9BE"/>
+  <text x="514" y="424" fill="#2B2B2B" font-family="Arial, sans-serif" font-size="18" font-weight="600">3. navigatesuccess finishes the bar</text>
+
+  <rect x="48" y="482" width="804" height="20" rx="10" fill="#E5DED0"/>
+  <rect x="470" y="482" width="382" height="20" rx="10" fill="#2BB24C"/>
+  <text x="48" y="530" fill="#5A625A" font-family="Arial, sans-serif" font-size="14">Left: feedback is delayed until loading.js renders. Right: feedback begins immediately on route departure.</text>
+</svg>

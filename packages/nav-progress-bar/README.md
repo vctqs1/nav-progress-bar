@@ -4,10 +4,13 @@ A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Compo
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
 
+> If you use Next.js App Router, this is the missing feedback layer before `loading.js` renders.
+
 ## Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
+- [Packages](#packages)
 - [Quick Start](#quick-start)
   - [Next.js App Router](#nextjs-app-router)
   - [Nuxt](#nuxt)
@@ -42,6 +45,14 @@ pnpm add @vctqs1/nav-progress-bar
 yarn add @vctqs1/nav-progress-bar
 ```
 
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic. Use this directly for vanilla HTML or non-React frameworks. |
+| [`@vctqs1/nav-progress-bar-react`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | React wrapper with SSR support and JSX types. Use this for React and especially Next.js App Router. |
+
+
 ## Quick Start
 
 Pick your framework below. For most SPA routers the Navigation API fires automatically after `registerNavProgressBar()` — no extra wiring needed. If you need to force a manual start signal, see [Manual start (non-Next.js)](#manual-start-non-nextjs) below.
@@ -49,6 +60,8 @@ Pick your framework below. For most SPA routers the Navigation API fires automat
 ### Next.js App Router
 
 The bar solves the `loading.js` dead gap — the frozen period between a user clicking a link and any loading feedback appearing. See [Next.js issue #43548](https://github.com/vercel/next.js/issues/43548).
+
+This is the primary use case: start the bar on route departure, then let it finish automatically when the new App Router page commits.
 
 **1. Add the React wrapper** (handles SSR rendering):
 
@@ -86,18 +99,6 @@ export function onRouterTransitionStart(
 ) {
   getNavProgressBar()?.start();
 }
-```
-
-**4. Enable instrumentation** in `next.config.ts`:
-
-```ts
-const nextConfig = {
-  experimental: {
-    instrumentationHook: true,
-  },
-};
-
-export default nextConfig;
 ```
 
 How the bar completes without a "done" callback — Next.js calls `history.pushState()` to update the URL, which fires the browser `navigatesuccess` event as a side effect. The web component listens for this internally and calls `finish()` automatically.
