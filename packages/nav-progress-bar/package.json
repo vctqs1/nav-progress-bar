@@ -1,6 +1,6 @@
 {
   "name": "@vctqs1/nav-progress-bar",
-  "version": "0.0.2-0",
+  "version": "0.0.2-4",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -16,6 +16,19 @@
   "files": [
     "dist",
     "!**/*.tsbuildinfo"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "progress-bar",
+    "navigation",
+    "web-component",
+    "custom-element",
+    "nextjs",
+    "app-router",
+    "loading",
+    "csp",
+    "shadow-dom",
+    "zero-dependency"
   ],
   "publishConfig": {
     "access": "public"
