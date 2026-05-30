@@ -11,6 +11,10 @@ type NavigationEventTarget = {
   removeEventListener(type: string, listener: EventListener): void;
 };
 
+const HTMLElementBase: typeof HTMLElement =
+  (globalThis as { HTMLElement?: typeof HTMLElement }).HTMLElement ??
+  (class {} as unknown as typeof HTMLElement);
+
 function getNavigationApi(): NavigationEventTarget | undefined {
   const nav = (globalThis as { navigation?: unknown }).navigation;
   if (!nav || typeof nav !== "object") return undefined;
@@ -53,7 +57,7 @@ function getNavigationApi(): NavigationEventTarget | undefined {
  * <nav-progress-bar primary="#006bde"></nav-progress-bar>
  * ```
  */
-export class NavProgressBar extends HTMLElement {
+export class NavProgressBar extends HTMLElementBase {
   private _layoutSheet: CSSStyleSheet | undefined = undefined;
   private _sheet: CSSStyleSheet | undefined = undefined;
   private _progressSheet: CSSStyleSheet | undefined = undefined;
@@ -334,3 +338,5 @@ export function registerNavProgressBar(options?: NavProgressBarOptions) {
 export function getNavProgressBar(): NavProgressBar | null {
   return document.querySelector<NavProgressBar>(TAG_NAME);
 }
+
+

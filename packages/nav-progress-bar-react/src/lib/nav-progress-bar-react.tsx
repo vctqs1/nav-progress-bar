@@ -1,4 +1,4 @@
-import type {NavProgressBarOptions} from "@vctqs1/nav-progress-bar"
+import type { NavProgressBarOptions } from "@vctqs1/nav-progress-bar"
 
 declare module "react" {
   namespace JSX {

@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 **2. Create `instrumentation-client.ts`** at the project root:
 
 ```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 registerNavProgressBar();
 
@@ -89,7 +89,7 @@ For non-SSR React apps, register and place the component anywhere above your rou
 
 ```tsx
 // main.tsx
-import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
+import { registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 registerNavProgressBar();
 ```
 

@@ -49,6 +49,22 @@ getNavProgressBar()?.start();
 getNavProgressBar()?.finish();
 ```
 
+### Non-Next.js manual start (optional)
+
+Most SPA routers trigger browser navigation events automatically, so the bar starts/finishes on its own after `registerNavProgressBar()`.
+If you want to force an immediate start signal in non-Next.js apps, add a guarded listener:
+
+```ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+
+const nav = (globalThis as { navigation?: EventTarget }).navigation;
+if (nav?.addEventListener) {
+  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
+}
+```
+
 ## Framework Guides
 
 ### Next.js App Router

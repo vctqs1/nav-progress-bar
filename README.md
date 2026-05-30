@@ -36,6 +36,19 @@ npm install @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
 <vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
 ```
 
+If you want to force a manual start signal in non-Next.js setups, feature-detect the Navigation API event support:
+
+```ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+
+const nav = (globalThis as { navigation?: EventTarget }).navigation;
+if (nav?.addEventListener) {
+  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
+}
+```
+
 ### Next.js App Router
 
 ```tsx
@@ -56,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ```ts
 // instrumentation-client.ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 registerNavProgressBar();
 
@@ -150,3 +163,4 @@ cd packages/nav-progress-bar-react && npm publish --access public
 ## License
 
 MIT
+# nav-progress-bar

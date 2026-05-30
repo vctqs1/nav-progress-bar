@@ -1,0 +1,15 @@
+{
+  "name": "@vctqs1/nextjs-app-router",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "next": "~16.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@vctqs1/nav-progress-bar-react": "workspace:*"
+  },
+  "nx": {
+    "name": "@vctqs1/nextjs-app-router",
+    "projectType": "application"
+  }
+}
