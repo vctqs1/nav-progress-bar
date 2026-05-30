@@ -42,7 +42,7 @@ npm install @vctqs1/nav-progress-bar
 
 **React / Next.js:**
 ```bash
-npm install @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
+npm install @vctqs1/nav-progress-bar-react
 ```
 
 ## Quick Start
