@@ -111,6 +111,11 @@ User clicks <Link>
   → "navigatesuccess" fires      → bar finishes
 ```
 
+> 🎬 **Demo** — [watch the bar in action with Next.js App Router →](https://github.com/vctqs1/nav-progress-bar#nextjs-app-router)
+
+
+<video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
+
 ---
 
 ### Nuxt

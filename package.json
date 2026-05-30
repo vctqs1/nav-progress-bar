@@ -1,6 +1,7 @@
 {
   "name": "@vctqs1/nav-progress-bar-workspace",
   "version": "0.0.0",
+  "repository": "https://github.com/vctqs1/nav-progress-bar",
   "license": "MIT",
   "scripts": {},
   "private": true,

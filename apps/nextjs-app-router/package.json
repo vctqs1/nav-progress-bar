@@ -1,6 +1,7 @@
 {
   "name": "@vctqs1/nextjs-app-router",
   "version": "0.0.1",
+  "repository": "https://github.com/vctqs1/nav-progress-bar",
   "private": true,
   "dependencies": {
     "next": "~16.1.6",

@@ -73,7 +73,7 @@ That's it. The bar starts on every route departure and finishes automatically wh
 
 > 🎬 **Demo** — watch the bar in action with Next.js App Router:
 
-https://github.com/user-attachments/assets/d7537ef6-81a5-4c55-8884-900c9af06161
+<video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
 
 ---
 

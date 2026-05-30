@@ -21,6 +21,7 @@
   ],
   "license": "MIT",
   "keywords": [
+    "toploader",
     "progress-bar",
     "navigation",
     "react",

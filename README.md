@@ -97,10 +97,9 @@ export function onRouterTransitionStart(
 
 For full framework guides (Nuxt, SvelteKit, Astro, Vanilla) see the [core package README](./packages/nav-progress-bar/README.md).
 
-> 🎬 **Demo** — watch the bar in action with Next.js App Router:
+> 🎬 **Demo** — [watch the bar in action with Next.js App Router →](https://github.com/vctqs1/nav-progress-bar#nextjs-app-router)
 
-https://github.com/user-attachments/assets/d7537ef6-81a5-4c55-8884-900c9af06161
-
+<video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
 
 ## Why
 
