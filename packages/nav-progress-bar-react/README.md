@@ -2,7 +2,7 @@
 
 React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) — a zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component.
 
-> Live demo: https://nav-progress-p0gw9z3lf-vctqs1s-projects.vercel.app/
+> Live demo: https://nav-progress-bar-git-main-vctqs1s-projects.vercel.app/
 
 > Demo video:
 

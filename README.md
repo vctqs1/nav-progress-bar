@@ -2,7 +2,7 @@
 
 A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. Works in any framework — or no framework at all.
 
-> Live demo: https://nav-progress-p0gw9z3lf-vctqs1s-projects.vercel.app/
+> Live demo: https://nav-progress-bar-git-main-vctqs1s-projects.vercel.app/
 
 > Demo video:
 
