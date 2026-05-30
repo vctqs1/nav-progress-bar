@@ -2,6 +2,8 @@
 
 A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. Works in any framework — or no framework at all.
 
+> Live demo: https://nav-progress-p0gw9z3lf-vctqs1s-projects.vercel.app/
+
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but works anywhere the browser supports the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API).
 
 > Next.js App Router users: this package fixes the frozen gap between clicking a link and `loading.js` becoming visible, so navigation feels immediate instead of stalled.

@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm nx build nextjs-app-router",
+  "outputDirectory": "apps/nextjs-app-router/.next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs"
+}

@@ -2,6 +2,8 @@
 
 React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) — a zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component.
 
+> Live demo: https://nav-progress-p0gw9z3lf-vctqs1s-projects.vercel.app/
+
 This package provides a thin React component that renders the `<vctqs1-nav-progress-bar>` custom element with proper TypeScript JSX types and SSR support via Declarative Shadow DOM.
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
