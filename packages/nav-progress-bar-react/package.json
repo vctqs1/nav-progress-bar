@@ -1,6 +1,6 @@
 {
   "name": "@vctqs1/nav-progress-bar-react",
-  "version": "0.0.2-5",
+  "version": "0.1.0",
   "repository": "https://github.com/vctqs1/nav-progress-bar",
   "type": "module",
   "main": "./dist/index.js",
