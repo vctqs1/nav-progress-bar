@@ -4,6 +4,20 @@ React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vc
 
 This package provides a thin React component that renders the `<vctqs1-nav-progress-bar>` custom element with proper TypeScript JSX types and SSR support via Declarative Shadow DOM.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Peer Dependencies](#peer-dependencies)
+- [Quick Start](#quick-start)
+  - [Next.js App Router](#nextjs-app-router-recommended-setup)
+  - [Custom color](#custom-color)
+  - [React SPA (Vite, CRA, etc.)](#react-spa-vite-cra-etc)
+- [Props](#props)
+- [How SSR Works](#how-ssr-works)
+- [Why a Separate Package?](#why-a-separate-package)
+- [Related](#related)
+- [License](#license)
+
 ## Installation
 
 ```bash
@@ -19,7 +33,7 @@ pnpm add @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
 | `react` | `>=18.0.0` |
 | `@vctqs1/nav-progress-bar` | `>=1.0.0` |
 
-## Usage
+## Quick Start
 
 ### Next.js App Router (recommended setup)
 
@@ -55,19 +69,11 @@ export function onRouterTransitionStart(
 }
 ```
 
-**3. Enable instrumentation** in `next.config.ts`:
-
-```ts
-const nextConfig = {
-  experimental: {
-    instrumentationHook: true,
-  },
-};
-
-export default nextConfig;
-```
-
 That's it. The bar starts on every route departure and finishes automatically when the new page commits.
+
+> 🎬 **Demo** — watch the bar in action with Next.js App Router:
+
+https://github.com/user-attachments/assets/d7537ef6-81a5-4c55-8884-900c9af06161
 
 ---
 

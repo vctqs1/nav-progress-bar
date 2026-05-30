@@ -4,6 +4,20 @@ A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Compo
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but works anywhere the browser supports the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API).
 
+## Table of Contents
+
+- [Packages](#packages)
+- [Quick Install](#quick-install)
+- [Quick Start](#quick-start)
+  - [Any framework](#any-framework)
+  - [Next.js App Router](#nextjs-app-router)
+- [Why](#why)
+- [How It Works](#how-it-works)
+- [Browser Support](#browser-support)
+- [Development](#development)
+- [Publishing](#publishing)
+- [License](#license)
+
 ## Packages
 
 | Package | Description |
@@ -82,6 +96,11 @@ export function onRouterTransitionStart(
 ```
 
 For full framework guides (Nuxt, SvelteKit, Astro, Vanilla) see the [core package README](./packages/nav-progress-bar/README.md).
+
+> 🎬 **Demo** — watch the bar in action with Next.js App Router:
+
+https://github.com/user-attachments/assets/d7537ef6-81a5-4c55-8884-900c9af06161
+
 
 ## Why
 

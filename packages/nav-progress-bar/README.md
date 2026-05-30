@@ -4,6 +4,25 @@ A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Compo
 
 > Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [Next.js App Router](#nextjs-app-router)
+  - [Nuxt](#nuxt)
+  - [SvelteKit](#sveltekit)
+  - [Astro](#astro)
+  - [Manual start (non-Next.js)](#manual-start-non-nextjs)
+  - [Vanilla HTML](#vanilla-html-snippet)
+  - [ES Module](#es-module)
+- [Color Configuration](#color-configuration)
+- [API](#api)
+- [How It Works](#how-it-works)
+- [Browser Support](#browser-support)
+- [Debugging](#debugging)
+- [License](#license)
+
 ## Features
 
 - **Zero dependencies** — pure Web Component, no React, no Vue, nothing
@@ -25,47 +44,7 @@ yarn add @vctqs1/nav-progress-bar
 
 ## Quick Start
 
-### Vanilla HTML
-
-```html
-<script type="module">
-  import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
-  registerNavProgressBar();
-</script>
-
-<vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
-```
-
-### ES Module
-
-```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
-
-registerNavProgressBar();
-
-// The bar auto-starts on navigate and auto-finishes on navigatesuccess.
-// You can also control it manually:
-getNavProgressBar()?.start();
-getNavProgressBar()?.finish();
-```
-
-### Non-Next.js manual start (optional)
-
-Most SPA routers trigger browser navigation events automatically, so the bar starts/finishes on its own after `registerNavProgressBar()`.
-If you want to force an immediate start signal in non-Next.js apps, add a guarded listener:
-
-```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
-
-registerNavProgressBar();
-
-const nav = (globalThis as { navigation?: EventTarget }).navigation;
-if (nav?.addEventListener) {
-  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
-}
-```
-
-## Framework Guides
+Pick your framework below. For most SPA routers the Navigation API fires automatically after `registerNavProgressBar()` — no extra wiring needed. If you need to force a manual start signal, see [Manual start (non-Next.js)](#manual-start-non-nextjs) below.
 
 ### Next.js App Router
 
@@ -197,7 +176,51 @@ registerNavProgressBar();
 
 ---
 
-### Vanilla HTML
+### Manual start (non-Next.js)
+
+Most SPA routers trigger browser navigation events automatically, so the bar starts/finishes on its own after `registerNavProgressBar()`.
+If you need to force an immediate start signal, add a guarded listener:
+
+```ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+
+const nav = (globalThis as { navigation?: EventTarget }).navigation;
+if (nav?.addEventListener) {
+  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
+}
+```
+
+---
+
+### Vanilla HTML (snippet)
+
+```html
+<script type="module">
+  import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
+  registerNavProgressBar();
+</script>
+
+<vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
+```
+
+### ES Module
+
+```ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+
+// The bar auto-starts on navigate and auto-finishes on navigatesuccess.
+// You can also control it manually:
+getNavProgressBar()?.start();
+getNavProgressBar()?.finish();
+```
+
+---
+
+### Vanilla HTML (full page)
 
 ```html
 <!DOCTYPE html>
