@@ -3,6 +3,8 @@ import './global.css';
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
 import Link from 'next/link';
 
+import UseRouterDemo from './use-router-demo';
+
 export const metadata = {
   title: 'Next.js Toploader Demo | @vctqs1/nav-progress-bar',
   description:
@@ -27,7 +29,10 @@ export default function RootLayout({
             <Link href="/products/3">Product 3</Link>
           </nav>
         </header>
-        <main className="app-shell">{children}</main>
+        <main className="app-shell">
+          {children}
+          <UseRouterDemo />
+        </main>
       </body>
     </html>
   );
