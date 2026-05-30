@@ -28,6 +28,9 @@ export default function Index() {
             <p className={styles.caption}>
               Demo: instant route feedback with the navigation top progress bar.
             </p>
+            <p className={styles.cspNote}>
+              CSP test is enabled (`style-src 'self'`) to verify no inline styles are required.
+            </p>
           </div>
         </div>
       </div>
