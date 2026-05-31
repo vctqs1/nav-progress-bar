@@ -38,8 +38,10 @@ registerNavProgressBar();
 ### React package
 
 ```bash
-pnpm add @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
+pnpm add @vctqs1/nav-progress-bar-react
 ```
+
+#### Next.js App Router
 
 ```tsx
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
@@ -52,6 +54,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
       </body>
     </html>
+  );
+}
+```
+
+```ts
+// instrumentation-client.ts
+import { getNavProgressBar, registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
+
+registerNavProgressBar();
+
+export function onRouterTransitionStart() {
+  getNavProgressBar()?.start();
+}
+```
+#### React SPA
+
+
+```tsx
+import NavProgressBar, { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
+
+registerNavProgressBar();
+
+export default function App({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    const nav = (globalThis as { navigation?: EventTarget }).navigation;
+    if (!nav?.addEventListener) return;
+    nav.addEventListener('navigate', () => getNavProgressBar()?.start());
+  }, []);
+  return (
+    <div>
+      <NavProgressBar />
+      {children}
+    </div>
   );
 }
 ```

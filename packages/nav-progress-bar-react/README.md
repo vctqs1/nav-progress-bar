@@ -11,7 +11,7 @@ React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vc
 ## Installation
 
 ```bash
-pnpm add @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
+pnpm add @vctqs1/nav-progress-bar-react
 ```
 
 ## Quick Start
