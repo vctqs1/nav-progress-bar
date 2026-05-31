@@ -1,4 +1,4 @@
-export default function MarketingLoading() {
+export default function Loading() {
   return (
     <div className="loading-skeleton">
       <div className="loading-skeleton-title" />
