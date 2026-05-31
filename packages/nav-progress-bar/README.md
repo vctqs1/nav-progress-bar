@@ -1,83 +1,48 @@
 # @vctqs1/nav-progress-bar
 
-A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. It can be used as a Next.js toploader for App Router and also works in any framework — or no framework at all.
+A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component. It works in any framework or in plain HTML, and it is especially useful for Next.js App Router where `loading.tsx` does not appear until the RSC payload arrives.
 
-> Live demo: https://nav-progress-bar-git-main-vctqs1s-projects.vercel.app/
+> Live demo: https://nav-progress-bar.vercel.app/
 
 > Demo video:
 
 <video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
 
-> Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
-
-> If you use Next.js App Router, this is the missing feedback layer before `loading.js` renders.
-
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Packages](#packages)
-- [Quick Start](#quick-start)
-  - [Next.js App Router](#nextjs-app-router)
-  - [Nuxt](#nuxt)
-  - [SvelteKit](#sveltekit)
-  - [Astro](#astro)
-  - [Manual start (non-Next.js)](#manual-start-non-nextjs)
-  - [Vanilla HTML](#vanilla-html-snippet)
-  - [ES Module](#es-module)
-- [Color Configuration](#color-configuration)
-- [API](#api)
-- [How It Works](#how-it-works)
-- [Browser Support](#browser-support)
-- [Debugging](#debugging)
-- [License](#license)
-
-## Features
-
-- **Zero dependencies** — pure Web Component, no React, no Vue, nothing
-- **CSP-safe** — all styling via `adoptedStyleSheets`, no inline `style=` or `<style>` tags
-- **SSR-ready** — supports Declarative Shadow DOM, no flash on hydration
-- **Framework-agnostic** — Next.js, Nuxt, SvelteKit, Astro, Remix, vanilla HTML
-- **Auto start/finish** — listens to browser Navigation API events automatically
-- **Customisable color** — raw hex or CSS custom property
-
 ## Installation
 
 ```bash
-npm install @vctqs1/nav-progress-bar
-# or
 pnpm add @vctqs1/nav-progress-bar
-# or
-yarn add @vctqs1/nav-progress-bar
 ```
-
-## Packages
-
-| Package | Description |
-|---------|-------------|
-| [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic. Use this directly for vanilla HTML or non-React frameworks. |
-| [`@vctqs1/nav-progress-bar-react`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | React wrapper with SSR support and JSX types. Use this for React and especially Next.js App Router. |
-
 
 ## Quick Start
 
-Pick your framework below. For most SPA routers the Navigation API fires automatically after `registerNavProgressBar()` — no extra wiring needed. If you need to force a manual start signal, see [Manual start (non-Next.js)](#manual-start-non-nextjs) below.
+```ts
+import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+
+registerNavProgressBar();
+getNavProgressBar()?.start();
+```
+
+```html
+<vctqs1-nav-progress-bar primary="#006bde"></vctqs1-nav-progress-bar>
+```
+
+If you want to start it manually from browser navigation events, feature-detect the Navigation API:
+
+```ts
+const nav = (globalThis as { navigation?: EventTarget }).navigation;
+
+if (nav?.addEventListener) {
+  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
+}
+```
 
 ### Next.js App Router
 
-The bar solves the `loading.js` dead gap — the frozen period between a user clicking a link and any loading feedback appearing. See [Next.js issue #43548](https://github.com/vercel/next.js/issues/43548).
-
-This is the primary use case: start the bar on route departure, then let it finish automatically when the new App Router page commits.
-
-**1. Add the React wrapper** (handles SSR rendering):
-
-```bash
-npm install @vctqs1/nav-progress-bar-react
-```
-
-**2. Add to your root layout** (`app/layout.tsx`):
+The bar fills the gap before `loading.tsx` becomes visible. The demo app in `apps/nextjs-app-router` uses a delayed product route to show the bar before the loading skeleton takes over.
 
 ```tsx
+// app/layout.tsx
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -92,160 +57,105 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-**3. Create `instrumentation-client.ts`** at the project root:
-
 ```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
+// instrumentation-client.ts
+import { getNavProgressBar, registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 registerNavProgressBar();
 
-export function onRouterTransitionStart(
-  url: string,
-  navigationType: 'push' | 'replace' | 'traverse',
-) {
+export function onRouterTransitionStart() {
   getNavProgressBar()?.start();
 }
 ```
 
-How the bar completes without a "done" callback — Next.js calls `history.pushState()` to update the URL, which fires the browser `navigatesuccess` event as a side effect. The web component listens for this internally and calls `finish()` automatically.
+## Features
 
-```
-User clicks <Link>
-  → "navigate" fires instantly   → bar starts  (0ms)
-  → Next.js fetches RSC payload
-  → React patches the tree
-  → history.pushState() finalises
-  → "navigatesuccess" fires      → bar finishes
-```
+- Zero dependencies
+- CSP-safe styling via `adoptedStyleSheets`
+- Declarative Shadow DOM support for SSR
+- Navigation API lifecycle handling for `navigate` and `navigatesuccess`
+- Optional `primary` color override via attribute or registration options
 
-> 🎬 **Demo** — [watch the bar in action with Next.js App Router →](https://github.com/vctqs1/nav-progress-bar#nextjs-app-router)
+## API
 
----
+### `registerNavProgressBar(options?)`
 
-### Nuxt
+Registers the `<vctqs1-nav-progress-bar>` custom element. Calling it more than once is safe. Registration is skipped if the browser does not support the Navigation API.
 
 ```ts
-// plugins/nav-progress-bar.client.ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
-
-export default defineNuxtPlugin(() => {
-  registerNavProgressBar();
-
-  const router = useRouter();
-  router.beforeEach(() => getNavProgressBar()?.start());
-  // finish() is handled automatically by navigatesuccess
-});
-```
-
-```html
-<!-- app.vue -->
-<template>
-  <div>
-    <vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
-    <NuxtPage />
-  </div>
-</template>
-```
-
----
-
-### SvelteKit
-
-```ts
-// src/hooks.client.ts
-import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
 registerNavProgressBar();
+registerNavProgressBar({ primary: '#fff' });
 ```
 
-```svelte
-<!-- src/routes/+layout.svelte -->
-<vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
-<slot />
-```
+### `getNavProgressBar()`
 
----
-
-### Astro
-
-```astro
----
-// src/layouts/BaseLayout.astro
----
-<html>
-  <body>
-    <vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
-    <slot />
-    <script>
-      import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
-      registerNavProgressBar();
-    </script>
-  </body>
-</html>
-```
-
----
-
-### Manual start (non-Next.js)
-
-Most SPA routers trigger browser navigation events automatically, so the bar starts/finishes on its own after `registerNavProgressBar()`.
-If you need to force an immediate start signal, add a guarded listener:
+Returns the first `<vctqs1-nav-progress-bar>` element in the document, or `null`.
 
 ```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
-
-registerNavProgressBar();
-
-const nav = (globalThis as { navigation?: EventTarget }).navigation;
-if (nav?.addEventListener) {
-  nav.addEventListener('navigate', () => getNavProgressBar()?.start());
-}
-```
-
----
-
-### Vanilla HTML (snippet)
-
-```html
-<script type="module">
-  import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
-  registerNavProgressBar();
-</script>
-
-<vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
-```
-
-### ES Module
-
-```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar';
-
-registerNavProgressBar();
-
-// The bar auto-starts on navigate and auto-finishes on navigatesuccess.
-// You can also control it manually:
-getNavProgressBar()?.start();
 getNavProgressBar()?.finish();
 ```
 
----
+### Instance methods
 
-### Vanilla HTML (full page)
+| Method | Description |
+|---|---|
+| `start()` | Begins the indeterminate progress animation and returns `this`. |
+| `finish()` | Completes the bar to 100% and fades it out, then returns `this`. |
 
-```html
-<!DOCTYPE html>
-<html>
-  <body>
-    <vctqs1-nav-progress-bar></vctqs1-nav-progress-bar>
+### Attribute
 
-    <script type="module">
-      import { registerNavProgressBar } from '@vctqs1/nav-progress-bar';
-      registerNavProgressBar();
-    </script>
-  </body>
-</html>
-```
+| Attribute | Type | Default | Description |
+|---|---|---|---|
+| `primary` | hex color or `--css-variable` | `#006bde` | Bar color. |
 
 ## Color Configuration
+
+```html
+<vctqs1-nav-progress-bar primary="#006bde"></vctqs1-nav-progress-bar>
+<vctqs1-nav-progress-bar primary="--your-brand-color"></vctqs1-nav-progress-bar>
+```
+
+The component resolves `primary="--token"` to `var(--token, #006bde)` inside its shadow root, so it can inherit document-level CSS custom properties.
+
+Priority order:
+
+1. HTML attribute `primary="..."`
+2. `registerNavProgressBar({ primary: '...' })`
+3. Hardcoded fallback `#006bde`
+
+## How It Works
+
+The component uses Shadow DOM and two constructable stylesheets:
+
+- A layout sheet for the fixed top-of-page positioning
+- A color sheet for the active/completed states
+- A progress sheet that rewrites only the width rule during animation
+
+Progress eases toward 85% every 200ms and finishes at 100% before fading out. The timing is intentionally indeterminate so the bar feels responsive without pretending to know exact load progress.
+
+## Browser Support
+
+Requires the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API). Chrome and Edge support it; unsupported browsers skip registration gracefully.
+
+## Framework Notes
+
+The core package is framework-agnostic. Common patterns:
+
+- Next.js App Router: render the element in `app/layout.tsx` and start it from `instrumentation-client.ts`
+- React SPA: register once and call `start()` from your router transition hooks if needed
+- Vanilla HTML: add the custom element to the page and call `registerNavProgressBar()` in a module script
+
+## Development
+
+```bash
+pnpm install
+pnpm nx build nav-progress-bar
+pnpm nx test nav-progress-bar
+```
+
+## License
+
+MIT
 
 Two formats are supported for the `primary` attribute:
 

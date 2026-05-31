@@ -1,68 +1,32 @@
 # @vctqs1/nav-progress-bar-react
 
-React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) — a zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component.
+React wrapper for [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar). It renders the `<vctqs1-nav-progress-bar>` custom element, re-exports the core API, and adds JSX typing so React and Next.js App Router can use it without extra setup.
 
-> Live demo: https://nav-progress-bar-git-main-vctqs1s-projects.vercel.app/
+> Live demo: https://nav-progress-bar.vercel.app/
 
 > Demo video:
 
 <video src="https://github.com/user-attachments/assets/4144ed95-8c25-4aa9-b804-905ac24805b4" controls width="100%"></video>
 
-This package provides a thin React component that renders the `<vctqs1-nav-progress-bar>` custom element with proper TypeScript JSX types and SSR support via Declarative Shadow DOM.
-
-> Originally built to solve the [Next.js App Router `loading.js` dead gap](https://github.com/vercel/next.js/issues/43548), but the underlying mechanism (the browser [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API)) works anywhere.
-
-> If you use Next.js App Router, this is the missing feedback layer before `loading.js` renders.
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Packages](#packages)
-- [Quick Start](#quick-start)
-  - [Next.js App Router](#nextjs-app-router-recommended-setup)
-  - [Custom color](#custom-color)
-  - [React SPA (Vite, CRA, etc.)](#react-spa-vite-cra-etc)
-- [loading.tsx vs NavProgressBar](#loadingtsx-vs-navprogressbar)
-- [Why](#why)
-- [Props](#props)
-- [How SSR Works](#how-ssr-works)
-- [Why a Separate Package?](#why-a-separate-package)
-- [Related](#related)
-- [License](#license)
-
 ## Installation
 
 ```bash
-npm install @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
-# or
 pnpm add @vctqs1/nav-progress-bar @vctqs1/nav-progress-bar-react
 ```
 
-## Packages
-
-| Package | Description |
-|---------|-------------|
-| [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | Core Web Component — zero dependencies, framework-agnostic |
-| [`@vctqs1/nav-progress-bar-react`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | React wrapper with SSR support and JSX types |
-
-
-
 ## Quick Start
 
-### Next.js App Router (recommended setup)
-
-This is the main reason to use this package: immediate route feedback before App Router finishes loading the next screen.
-
-**1. Add to root layout** (`app/layout.tsx`):
+### Next.js App Router
 
 ```tsx
+// app/layout.tsx
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
       <body>
-        <NavProgressBar />
+        <NavProgressBar primary="#3fffa8" />
         {children}
       </body>
     </html>
@@ -70,184 +34,82 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-**2. Create `instrumentation-client.ts`** at the project root:
-
 ```ts
-import { registerNavProgressBar, getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
+// instrumentation-client.ts
+import { getNavProgressBar, registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 registerNavProgressBar();
 
-export function onRouterTransitionStart(
-  url: string,
-  navigationType: 'push' | 'replace' | 'traverse',
-) {
+export function onRouterTransitionStart() {
   getNavProgressBar()?.start();
 }
 ```
 
-That's it. In Next.js App Router, the bar starts from `onRouterTransitionStart()` on every route departure and finishes automatically when the new page commits.
+In the demo app, product routes intentionally delay their server response so you can see the progress bar appear before the route-level `loading.tsx` fallback.
 
----
-
-### Custom color
+### React SPA
 
 ```tsx
-<NavProgressBar primary="#ff6600" />
-```
+import { useEffect } from 'react';
+import NavProgressBar, { getNavProgressBar, registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
-```tsx
-<NavProgressBar primary="--your-brand-color" />
-```
-
----
-
-### React SPA (Vite, CRA, etc.)
-
-For non-SSR React apps, register and place the component anywhere above your routes:
-
-```tsx
-// main.tsx
-import { registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 registerNavProgressBar();
-```
-
-```tsx
-// App.tsx
-import NavProgressBar, { getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 export default function App() {
   useEffect(() => {
-    navigation?.addEventListener('navigate', () => getNavProgressBar()?.start());
+    const nav = (globalThis as { navigation?: EventTarget }).navigation;
+    if (!nav?.addEventListener) return;
+    nav.addEventListener('navigate', () => getNavProgressBar()?.start());
   }, []);
+
   return (
     <>
       <NavProgressBar />
-      <RouterProvider router={router} />
+      <main>{/* routes */}</main>
     </>
   );
 }
 ```
 
-In a plain SPA the bar auto-starts and auto-finishes via the browser Navigation API — no extra wiring needed.
+## Why This Package Exists
 
-## loading.tsx vs NavProgressBar
+The core package is framework-agnostic. This wrapper exists to make React usage feel native:
 
-Next.js `loading.tsx` is a Suspense boundary — it shows a skeleton/spinner **after** the server responds. This package fills the gap **before** the server even starts responding.
-
-**Without NavProgressBar — only `loading.tsx`:**
-
-```
-// app/products/[id]/loading.tsx
-export default function Loading() {
-  return <p>Loading…</p>;
-}
-```
-
-```
-User clicks link
-  ↓ nothing visible             ← frozen, 0–2s dead gap
-  ↓ RSC payload arrives
-  ↓ React renders Suspense shell
-    → loading.tsx appears        ← feedback finally shows
-    → full page loads
-```
-
-**With NavProgressBar + `loading.tsx`:**
-
-```
-// app/layout.tsx
-import NavProgressBar from '@vctqs1/nav-progress-bar-react';
-// ...
-<NavProgressBar />
-
-// instrumentation-client.ts
-export function onRouterTransitionStart() {
-  getNavProgressBar()?.start();
-}
-
-// app/products/[id]/loading.tsx
-export default function Loading() {
-  return <p>Loading…</p>;
-}
-```
-
-```
-User clicks link
-  → bar starts immediately       ← 0ms feedback (Navigation API)
-  ↓ RSC payload arrives
-  ↓ React renders Suspense shell
-    → loading.tsx appears        ← skeleton/spinner takes over
-    → bar finishes
-    → full page loads
-```
-
-They complement each other: the progress bar handles the gap before `loading.tsx` is visible, and `loading.tsx` handles the skeleton while the full page renders.
-
----
-
-## Why
-
-![Next.js App Router loading gap vs nav-progress-bar flow](./docs/nextjs-app-router-dead-gap.svg)
-
-In Next.js App Router, `loading.js` is a React Suspense boundary — it only renders **after** the RSC payload arrives. On slow connections this creates a dead period of 100ms–2s+ where the page looks frozen after a user clicks a link.
-
-```
-User clicks Link
-  → nothing visible happens   ← dead gap: page looks frozen
-  → RSC payload arrives
-  → React renders Suspense shell
-    → loading.js displays      ← feedback finally appears
-```
-
-This is a known App Router limitation:
-- [Next.js issue #43548 — loading.js not shown immediately on navigate](https://github.com/vercel/next.js/issues/43548)
-- [Reddit thread — loading state does not show when navigating](https://www.reddit.com/r/nextjs/comments/1c3ngkh/the_loading_state_does_not_show_when_i_navigate/)
-
-
-
-`@vctqs1/nav-progress-bar` fills that gap by starting from Next.js `onRouterTransitionStart()` — synchronously on route departure, before the next screen is ready:
-
-```
-User clicks <Link> / router.push()
-  → Next.js dispatches ACTION_NAVIGATE (React startTransition)   [app-router-instance.ts#L457-L474]
-  → Next.js calls history.pushState() to update the URL          [app-router.tsx#L52-L54]
-    → browser fires "navigate"       → bar starts
-      → Next.js fetches RSC payload
-        → React patches the tree
-          → Next.js finalises with history.pushState()           [app-router.tsx#L52-L54]
-            → browser fires "navigatesuccess" → bar finishes
-```
-
-Next.js App Router does **not** call `navigation.navigate()` directly. It manages routing internally via its own action queue ([`dispatchAppRouterAction`](https://github.com/vercel/next.js/blob/v16.2.6/packages/next/src/client/components/app-router-instance.ts#L457-L474)) using React `startTransition`, then calls `history.pushState()` to update the URL. The browser Navigation API fires `navigate` and `navigatesuccess` as a side effect of those `history` mutations.
-
+1. It renders the custom element from JSX.
+2. It ships JSX types so TypeScript accepts `<vctqs1-nav-progress-bar>`.
+3. It keeps SSR-friendly declarative shadow DOM support available without forcing React into the core package.
 
 ## Props
 
 | Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `primary` | `string` | `#006bde` | Bar color — accepts any CSS color or a `--css-variable` name |
+|---|---|---|---|
+| `primary` | `string` | `#006bde` | Bar color. Accepts a hex color or a CSS custom property name like `--brand-color`. |
 
-## How SSR Works
+## loading.tsx vs NavProgressBar
 
-The component renders a `<vctqs1-nav-progress-bar>` custom element server-side. It uses `<template shadowrootmode="open">` (Declarative Shadow DOM) to pre-render the bar div so the element has visual structure before JavaScript runs — preventing a flash of invisible bar during hydration.
+`loading.tsx` only appears after the server responds. The progress bar starts earlier, at route departure, so the user sees immediate feedback while the App Router is still waiting on RSC data.
 
-When the custom element upgrades in the browser it detects the existing shadow root:
-
-```ts
-const shadow = this.shadowRoot ?? this.attachShadow({ mode: 'open' });
-```
-
-And skips creating a duplicate bar div if one already exists:
-
-```ts
-if (!shadow.querySelector('.bar')) {
-  const bar = document.createElement('div');
-  bar.className = 'bar';
-  shadow.append(bar);
+```tsx
+// app/products/[id]/loading.tsx
+export default function Loading() {
+  return <p>Loading product…</p>;
 }
 ```
 
-## Why a Separate Package?
+That is why the demo uses a delayed product route: the bar should show first, then the loading skeleton should take over, then the page content should render.
+
+## SSR
+
+The wrapper renders the custom element server-side, and the underlying component reuses declarative shadow DOM during hydration. That avoids the flash you would get from mounting an empty custom element and filling it later in the browser.
+
+## Related
+
+- [Core package README](../nav-progress-bar/README.md)
+- [Next.js issue #43548](https://github.com/vercel/next.js/issues/43548)
+
+## License
+
+MIT
 
 The core `@vctqs1/nav-progress-bar` package has zero dependencies and works in any environment. This wrapper exists solely to:
 
