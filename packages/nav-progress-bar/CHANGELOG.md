@@ -1,3 +1,7 @@
+## 0.2.0 (2026-05-31)
+
+This was a version bump only for @vctqs1/nav-progress-bar to align it with other projects, there were no code changes.
+
 ## 0.1.3 (2026-05-31)
 
 This was a version bump only for @vctqs1/nav-progress-bar to align it with other projects, there were no code changes.
