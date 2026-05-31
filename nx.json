@@ -87,7 +87,10 @@
       "preVersionCommand": "pnpm nx run-many -t build --projects @vctqs1/nav-progress-bar,@vctqs1/nav-progress-bar-react"
     },
     "changelog": {
-      "projectChangelogs": true
+      "projectChangelogs": true,
+      "git": {
+        "commit": true
+      }
     }
   },
   
