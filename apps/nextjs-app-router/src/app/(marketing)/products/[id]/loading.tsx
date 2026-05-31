@@ -1,6 +1,6 @@
 export default function ProductLoading() {
   return (
-    <div style={{ color: '#888' }}>
+    <div className="loading-copy">
       <p>Loading product…</p>
     </div>
   );

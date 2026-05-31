@@ -122,6 +122,32 @@ pre {
   max-width: 960px;
   padding: 1.25rem 1rem 2rem;
 }
+
+.marketing-shell {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.warning-delay {
+  color: orange;
+}
+
+.loading-copy {
+  color: #888;
+}
+
+.info-panel {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.info-close-link {
+  margin-top: 0.5rem;
+}
 .rounded {
   border-radius: 1.5rem;
 }

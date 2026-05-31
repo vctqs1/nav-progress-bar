@@ -22,11 +22,11 @@ export default function RootLayout({
         <NavProgressBar primary='#3fffa8' />
         <header className="app-nav">
           <nav aria-label="Primary" className="app-nav-inner">
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/products/1">Product 1</Link>
-            <Link href="/products/2">Product 2</Link>
-            <Link href="/products/3">Product 3</Link>
+            <Link prefetch={false} href="/">Home</Link>
+            <Link prefetch={false} href="/about">About</Link>
+            <Link prefetch={false} href="/products/1">Product 1</Link>
+            <Link prefetch={false} href="/products/2">Product 2</Link>
+            <Link prefetch={false} href="/products/3">Product 3</Link>
           </nav>
         </header>
         <main className="app-shell">

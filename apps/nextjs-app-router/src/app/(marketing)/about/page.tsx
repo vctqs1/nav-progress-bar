@@ -1,5 +1,14 @@
 
-export default function AboutPage() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+async function delay(ms: number) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export default async function AboutPage() {
+  await delay(1500);
+
   return (
     <div>
       <h1>About</h1>

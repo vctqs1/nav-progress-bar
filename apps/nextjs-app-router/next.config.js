@@ -11,13 +11,14 @@ const nextConfig = {
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
   async headers() {
+    const isDev = process.env.NODE_ENV !== 'production';
     const csp = [
       "default-src 'self'",
       "base-uri 'self'",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self'",
+      isDev ? "style-src 'self' 'unsafe-inline'" : "style-src 'self'",
       "img-src 'self' data: blob:",
       "font-src 'self' data:",
       "media-src 'self' blob:",
