@@ -148,6 +148,43 @@ pre {
 .info-close-link {
   margin-top: 0.5rem;
 }
+
+/* Loading skeleton — shown by loading.tsx while RSC loads */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.loading-skeleton {
+  padding: 1rem 0;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.loading-skeleton-title {
+  height: 1.75rem;
+  width: 40%;
+  background: #d1d5db;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.loading-skeleton-line {
+  height: 1rem;
+  width: 80%;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.loading-skeleton-line.short {
+  width: 55%;
+}
+
+.loading-copy {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
 .rounded {
   border-radius: 1.5rem;
 }

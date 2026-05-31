@@ -22,6 +22,7 @@ This package provides a thin React component that renders the `<vctqs1-nav-progr
   - [Next.js App Router](#nextjs-app-router-recommended-setup)
   - [Custom color](#custom-color)
   - [React SPA (Vite, CRA, etc.)](#react-spa-vite-cra-etc)
+- [loading.tsx vs NavProgressBar](#loadingtsx-vs-navprogressbar)
 - [Why](#why)
 - [Props](#props)
 - [How SSR Works](#how-ssr-works)
@@ -112,9 +113,12 @@ registerNavProgressBar();
 
 ```tsx
 // App.tsx
-import NavProgressBar from '@vctqs1/nav-progress-bar-react';
+import NavProgressBar, { getNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 export default function App() {
+  useEffect(() => {
+    navigation?.addEventListener('navigate', () => getNavProgressBar()?.start());
+  }, []);
   return (
     <>
       <NavProgressBar />
@@ -125,6 +129,61 @@ export default function App() {
 ```
 
 In a plain SPA the bar auto-starts and auto-finishes via the browser Navigation API — no extra wiring needed.
+
+## loading.tsx vs NavProgressBar
+
+Next.js `loading.tsx` is a Suspense boundary — it shows a skeleton/spinner **after** the server responds. This package fills the gap **before** the server even starts responding.
+
+**Without NavProgressBar — only `loading.tsx`:**
+
+```
+// app/products/[id]/loading.tsx
+export default function Loading() {
+  return <p>Loading…</p>;
+}
+```
+
+```
+User clicks link
+  ↓ nothing visible             ← frozen, 0–2s dead gap
+  ↓ RSC payload arrives
+  ↓ React renders Suspense shell
+    → loading.tsx appears        ← feedback finally shows
+    → full page loads
+```
+
+**With NavProgressBar + `loading.tsx`:**
+
+```
+// app/layout.tsx
+import NavProgressBar from '@vctqs1/nav-progress-bar-react';
+// ...
+<NavProgressBar />
+
+// instrumentation-client.ts
+export function onRouterTransitionStart() {
+  getNavProgressBar()?.start();
+}
+
+// app/products/[id]/loading.tsx
+export default function Loading() {
+  return <p>Loading…</p>;
+}
+```
+
+```
+User clicks link
+  → bar starts immediately       ← 0ms feedback (Navigation API)
+  ↓ RSC payload arrives
+  ↓ React renders Suspense shell
+    → loading.tsx appears        ← skeleton/spinner takes over
+    → bar finishes
+    → full page loads
+```
+
+They complement each other: the progress bar handles the gap before `loading.tsx` is visible, and `loading.tsx` handles the skeleton while the full page renders.
+
+---
 
 ## Why
 

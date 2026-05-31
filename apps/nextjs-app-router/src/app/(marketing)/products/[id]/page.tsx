@@ -2,5 +2,5 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default function ProductPage() {
-  return null;
+  return <p>✅ Product details loaded successfully!</p>;
 }

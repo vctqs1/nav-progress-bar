@@ -10,6 +10,14 @@ const nextConfig = {
   // Use this to set Nx-specific options
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
+  experimental: {
+    // Disable client-side router cache so loading.tsx shows on every navigation
+    // (not just first visit). Good for demo purposes.
+    staleTimes: {
+      dynamic: 0,
+      static: 0,
+    },
+  },
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';
     const csp = [
