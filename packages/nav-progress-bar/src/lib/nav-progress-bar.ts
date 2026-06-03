@@ -4,6 +4,8 @@
 export interface NavProgressBarOptions {
   /** Primary color of the progress bar (hex, rgb, or CSS custom property) */
   primary?: string;
+  /** Bar height (for example `3px` or `0.25rem`) */
+  height?: string;
 }
 
 type NavigationEventTarget = {
@@ -66,7 +68,7 @@ export class NavProgressBar extends HTMLElementBase {
   private _options: NavProgressBarOptions;
 
   static get observedAttributes() {
-    return ["primary"];
+    return ["primary", "height"];
   }
 
   /**
@@ -116,7 +118,7 @@ export class NavProgressBar extends HTMLElementBase {
     if (this._sheet) this._applyColorSheet();
   }
 
-  private _resolveColor(
+  private _resolveStyleValue(
     attributeValue: string | null,
     optionValue: string | undefined,
     fallback: string,
@@ -127,16 +129,21 @@ export class NavProgressBar extends HTMLElementBase {
   }
 
   private _buildColorSheet(): CSSStyleSheet {
-    const primary = this._resolveColor(
+    const primary = this._resolveStyleValue(
       this.getAttribute("primary"),
       this._options.primary,
       "#006bde",
+    );
+    const height = this._resolveStyleValue(
+      this.getAttribute("height"),
+      this._options.height,
+      "3px",
     );
 
     const sheet = new CSSStyleSheet();
     sheet.insertRule(`
       .bar {
-        height: 3px;
+        height: ${height};
         background: ${primary};
         opacity: 0;
         transition: width 0.3s ease, opacity 0.4s ease;

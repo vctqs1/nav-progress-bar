@@ -6,6 +6,7 @@
     "url": "https://github.com/vctqs1/nav-progress-bar.git",
     "directory": "packages/nav-progress-bar-react"
   },
+  "description": "Lightweight navigation progress bar for React and Next.js App Router with zero dependencies",
   "homepage": "https://nav-progress-bar.vercel.app",
   "type": "module",
   "main": "./dist/index.js",
@@ -26,6 +27,13 @@
   ],
   "license": "MIT",
   "keywords": [
+    "@vctqs1/nav-progress-bar",
+    "@vctqs1/nav-progress-bar-react",
+    "nav-progress-bar",
+    "nav-progress-bar-react",
+    "react progress bar",
+    "navigation progress bar",
+    "route progress bar",
     "toploader",
     "nextjs-toploader",
     "nextjs toploader",
@@ -36,15 +44,13 @@
     "progress-bar",
     "navigation",
     "react",
-    "web-component",
-    "custom-element",
     "nextjs",
     "app-router",
     "loading",
-    "csp",
-    "shadow-dom"
+    "csp"
   ],
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "dependencies": {

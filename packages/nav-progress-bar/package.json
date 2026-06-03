@@ -6,6 +6,7 @@
     "url": "https://github.com/vctqs1/nav-progress-bar.git",
     "directory": "packages/nav-progress-bar"
   },
+  "description": "A zero-dependency, CSP-safe top-of-page progress bar built as a native Web Component",
   "homepage": "https://nav-progress-bar.vercel.app",
   "type": "module",
   "main": "./dist/index.js",
@@ -25,6 +26,11 @@
   ],
   "license": "MIT",
   "keywords": [
+    "@vctqs1/nav-progress-bar",
+    "nav-progress-bar",
+    "react progress bar",
+    "navigation progress bar",
+    "route progress bar",
     "toploader",
     "nextjs-toploader",
     "nextjs toploader",
@@ -34,16 +40,14 @@
     "route transition loader",
     "progress-bar",
     "navigation",
-    "web-component",
-    "custom-element",
     "nextjs",
     "app-router",
     "loading",
     "csp",
-    "shadow-dom",
     "zero-dependency"
   ],
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "nx": {
