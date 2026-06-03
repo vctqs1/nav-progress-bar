@@ -10,10 +10,10 @@ Monorepo for the `@vctqs1/nav-progress-bar` progress bar and its React wrapper. 
 
 ## Packages
 
-| Package | Description |
-|---|---|
-| [`@vctqs1/nav-progress-bar`](./packages/nav-progress-bar/README.md) | Core Web Component, framework-agnostic, zero dependencies. |
-| [`@vctqs1/nav-progress-bar-react`](./packages/nav-progress-bar-react/README.md) | React wrapper with JSX types and SSR-friendly `<NavProgressBar />`. |
+| Package | NPM | Documentation | Description |
+|---|---|---|---|
+| `@vctqs1/nav-progress-bar` | [![npm](https://img.shields.io/npm/v/@vctqs1/nav-progress-bar)](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) | [Docs](./packages/nav-progress-bar/README.md) | Core Web Component, framework-agnostic, zero dependencies. |
+| `@vctqs1/nav-progress-bar-react` | [![npm](https://img.shields.io/npm/v/@vctqs1/nav-progress-bar-react)](https://www.npmjs.com/package/@vctqs1/nav-progress-bar-react) | [Docs](./packages/nav-progress-bar-react/README.md) | React wrapper with JSX types and SSR-friendly `<NavProgressBar />`. |
 
 ## What’s In The Repo
 

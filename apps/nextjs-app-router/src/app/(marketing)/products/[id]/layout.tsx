@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 // Simulate a slow data fetch to make the progress bar visible
 async function getProduct(id: string) {
-  await new Promise((r) => setTimeout(r, id === '3' ? 7000 : 2200));
+  await new Promise((r) => setTimeout(r, id === '2' ? 7000 : 3000));
   return { id, name: `Product ${id}`, price: `$${(Number(id) * 29).toFixed(2)}` };
 }
 
@@ -29,11 +29,11 @@ export default async function ProductLayout({
       <p>
         <Link prefetch={false} href={`/products/${id}/info`}>ℹ️ View Info</Link>
       </p>
-      {id === '3' && (
+      {id === '2' && (
         <p className="warning-delay">⚠️ This page has a 7s artificial delay — watch the bar!</p>
       )}
-      {modal}
       {children}
+      {modal}
     </div>
   );
 }

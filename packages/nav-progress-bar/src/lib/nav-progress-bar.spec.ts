@@ -57,7 +57,7 @@ describe('NavProgressBar', () => {
     });
 
     it('should create instance with custom options', () => {
-      element = createNavProgressBar({ primary: '#ff0000' });
+      element = createNavProgressBar({ primary: '#ff0000', height: '6px' });
       expect(element).toBeInstanceOf(NavProgressBar);
     });
 
@@ -69,7 +69,7 @@ describe('NavProgressBar', () => {
 
   describe('static members', () => {
     it('should have observedAttributes', () => {
-      expect(NavProgressBar.observedAttributes).toEqual(['primary']);
+      expect(NavProgressBar.observedAttributes).toEqual(['primary', 'height']);
     });
   });
 
@@ -267,16 +267,30 @@ describe('NavProgressBar', () => {
       expect(element.shadowRoot?.adoptedStyleSheets.length).toBeGreaterThanOrEqual(initialSheets);
     });
 
+    it('should reapply color sheet when height attribute changes', () => {
+      const initialSheets = element.shadowRoot?.adoptedStyleSheets.length ?? 0;
+
+      element.setAttribute('height', '6px');
+
+      expect(element.shadowRoot?.adoptedStyleSheets.length).toBeGreaterThanOrEqual(initialSheets);
+    });
+
     it('should update styling when primary color changes', () => {
       element.setAttribute('primary', '#ff0000');
 
       expect(getRuleCssTextContaining(element, 'background')).toContain('#ff0000');
     });
+
+    it('should update styling when height changes', () => {
+      element.setAttribute('height', '6px');
+
+      expect(getRuleCssTextContaining(element, 'background')).toContain('height: 6px');
+    });
   });
 
   describe('color resolution', () => {
     beforeEach(() => {
-      element = createNavProgressBar({ primary: '#00ff00' });
+      element = createNavProgressBar({ primary: '#00ff00', height: '4px' });
       container.appendChild(element);
     });
 
@@ -290,6 +304,10 @@ describe('NavProgressBar', () => {
       expect(getRuleCssTextContaining(element, 'background')).toContain('#00ff00');
     });
 
+    it('should use height option if attribute not set', () => {
+      expect(getRuleCssTextContaining(element, 'background')).toContain('height: 4px');
+    });
+
     it('should use fallback color if neither attribute nor option provided', () => {
       const element2 = createNavProgressBar();
       container.appendChild(element2);
@@ -297,10 +315,23 @@ describe('NavProgressBar', () => {
       expect(getRuleCssTextContaining(element2, 'background')).toContain('#006bde');
     });
 
+    it('should use fallback height if neither attribute nor option provided', () => {
+      const element2 = createNavProgressBar();
+      container.appendChild(element2);
+
+      expect(getRuleCssTextContaining(element2, 'background')).toContain('height: 3px');
+    });
+
     it('should support CSS custom properties', () => {
       element.setAttribute('primary', '--custom-color');
 
       expect(getRuleCssTextContaining(element, 'background')).toContain('var(--custom-color');
+    });
+
+    it('should support CSS custom properties for height', () => {
+      element.setAttribute('height', '--bar-height');
+
+      expect(getRuleCssTextContaining(element, 'background')).toContain('height: var(--bar-height');
     });
   });
 

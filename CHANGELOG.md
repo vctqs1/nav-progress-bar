@@ -1,31 +1,9 @@
-## 0.2.0 (2026-05-31)
+## 0.3.0 (2026-06-03)
 
-This was a version bump only, there were no code changes.
+### 🚀 Features
 
-## 0.1.3 (2026-05-31)
+- able to set height of nav-progress-bar ([3558e98](https://github.com/vctqs1/nav-progress-bar/commit/3558e98))
 
-This was a version bump only, there were no code changes.
+### ❤️ Thank You
 
-## 0.1.2 (2026-05-30)
-
-This was a version bump only, there were no code changes.
-
-## 0.1.1 (2026-05-30)
-
-This was a version bump only, there were no code changes.
-
-## 0.1.0 (2026-05-30)
-
-This was a version bump only, there were no code changes.
-
-## 0.0.2-5 (2026-05-30)
-
-This was a version bump only, there were no code changes.
-
-## 0.0.2-4 (2026-05-30)
-
-This was a version bump only, there were no code changes.
-
-## 0.0.2-0 (2026-05-30)
-
-This was a version bump only, there were no code changes.
+- vctqs1 @vctqs1

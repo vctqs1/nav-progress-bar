@@ -18,6 +18,8 @@ pnpm add @vctqs1/nav-progress-bar-react
 
 ### Next.js App Router
 
+Use this wrapper when you want a React component in `app/layout.tsx`. The core package still wires browser navigation events in normal browser setups, but App Router should call `start()` from its own transition hook.
+
 ```tsx
 // app/layout.tsx
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
@@ -49,19 +51,14 @@ In the demo app, product routes intentionally delay their server response so you
 
 ### React SPA
 
+In a normal React app, register once and render the wrapper. The core package wires the Navigation API listeners itself in supported browsers.
+
 ```tsx
-import { useEffect } from 'react';
-import NavProgressBar, { getNavProgressBar, registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
+import NavProgressBar, { registerNavProgressBar } from '@vctqs1/nav-progress-bar-react';
 
 registerNavProgressBar();
 
 export default function App() {
-  useEffect(() => {
-    const nav = (globalThis as { navigation?: EventTarget }).navigation;
-    if (!nav?.addEventListener) return;
-    nav.addEventListener('navigate', () => getNavProgressBar()?.start());
-  }, []);
-
   return (
     <>
       <NavProgressBar />
@@ -84,10 +81,11 @@ The core package is framework-agnostic. This wrapper exists to make React usage 
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `primary` | `string` | `#006bde` | Bar color. Accepts a hex color or a CSS custom property name like `--brand-color`. |
+| `height` | `string` | `3px` | Bar height. Accepts a CSS length or a CSS custom property name like `--nav-bar-height`. |
 
 ## loading.tsx vs NavProgressBar
 
-`loading.tsx` only appears after the server responds. The progress bar starts earlier, at route departure, so the user sees immediate feedback while the App Router is still waiting on RSC data.
+`loading.tsx` only appears after the server responds. The progress bar can start earlier, but in Next.js App Router that start signal should come from your own transition hook, not from the browser `navigate` event alone.
 
 ```tsx
 // app/products/[id]/loading.tsx
@@ -106,21 +104,6 @@ The wrapper renders the custom element server-side, and the underlying component
 
 - [Core package README](../nav-progress-bar/README.md)
 - [Next.js issue #43548](https://github.com/vercel/next.js/issues/43548)
-
-## License
-
-MIT
-
-The core `@vctqs1/nav-progress-bar` package has zero dependencies and works in any environment. This wrapper exists solely to:
-
-1. Provide correct TypeScript JSX types for `<vctqs1-nav-progress-bar>` so React doesn't complain about an unknown element
-2. Ship a typed React component with a clean import
-3. Handle the Declarative Shadow DOM template for SSR without pulling React into the core package
-
-## Related
-
-- [`@vctqs1/nav-progress-bar`](https://www.npmjs.com/package/@vctqs1/nav-progress-bar) — core Web Component, framework-agnostic
-- [Next.js issue #43548](https://github.com/vercel/next.js/issues/43548) — the problem this solves
 
 ## License
 
