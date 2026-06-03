@@ -7,7 +7,7 @@ async function delay(ms: number) {
 }
 
 export default async function AboutPage() {
-  await delay(1500);
+  await delay(2000);
 
   return (
     <div>

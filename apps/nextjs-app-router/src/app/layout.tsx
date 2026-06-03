@@ -2,13 +2,44 @@ import './global.css';
 
 import NavProgressBar from '@vctqs1/nav-progress-bar-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
-import UseRouterDemo from './use-router-demo';
-
-export const metadata = {
-  title: 'Next.js Toploader Demo | @vctqs1/nav-progress-bar',
+export const metadata: Metadata = {
+  metadataBase: new URL('https://nav-progress-bar.vercel.app'),
+  title: {
+    default: '@vctqs1/nav-progress-bar-react',
+    template: '%s | @vctqs1/nav-progress-bar-react',
+  },
   description:
-    'Next.js toploader demo for App Router. A zero-dependency, CSP-safe navigation progress bar built as a native Web Component.',
+    'A zero-dependency, CSP-safe navigation progress bar for Next.js App Router. The React wrapper is the recommended entry point, while the core package powers framework-agnostic usage.',
+  keywords: [
+    '@vctqs1/nav-progress-bar-react',
+    '@vctqs1/nav-progress-bar',
+    'nextjs app router progress bar',
+    'nav-progress-bar-react',
+    'nav-progress-bar',
+    'navigation progress bar',
+    'csp-safe web component',
+    'top loader',
+    'route transition loader',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: '@vctqs1/nav-progress-bar-react',
+    description:
+      'A zero-dependency, CSP-safe navigation progress bar for Next.js App Router, React, and plain HTML.',
+    url: '/',
+    siteName: '@vctqs1/nav-progress-bar-react',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '@vctqs1/nav-progress-bar-react',
+    description:
+      'A zero-dependency, CSP-safe navigation progress bar for Next.js App Router, React, and plain HTML.',
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +62,6 @@ export default function RootLayout({
         </header>
         <main className="app-shell">
           {children}
-          <UseRouterDemo />
         </main>
       </body>
     </html>
